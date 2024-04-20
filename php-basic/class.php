@@ -11,10 +11,10 @@
       public $name;
 
       public function set_name(string $name){
-        $this->name = $name;
+        $this->name =$name;
       }
       public function show_name(){
-        echo $this->name . '<br>';
+        echo $this->name .'<br>';
       }
     }
     $coffee =new Product();
