@@ -37,6 +37,8 @@
 
   echo $add->format('現在から1年後はY年n月j日H時i分s秒です。') . '<br>';
   echo $sub->format('現在から3日前はY年n月j日H時i分s秒です。');
+
+  
   ?>
 </body>
 </html>

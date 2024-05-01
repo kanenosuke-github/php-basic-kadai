@@ -26,7 +26,7 @@
         body:JSON.stringify(dispData)// JSON形式に変換
       })
       // サーバー側からAjaxレスポンスを受け取ったときの処理
-      .then((response) => response.json())// JSON形式に変換
+      .then((response) => response.json())// JSON形式のものをJavascriptに変換
       .then((data) => {
         // 受け取ったデータを表示
         outputDiv.textContent = data.message;
@@ -38,7 +38,7 @@
        // 定期実行中（IDが0でない）なら停止
        if(intervalId){
         //定期実行を停止
-       clearInterval(intervalId){
+       clearInterval(intervalId);
        intervalId =0;
        refreshBtn.textContent = '更新'; //ボタン表示切り替え
     }else{
