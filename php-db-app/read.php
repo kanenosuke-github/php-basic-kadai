@@ -17,39 +17,39 @@ try{
     $order = NULL;
 }
 
- // productsテーブルからすべてのカラムのデータを取得するためのSQL文を変数$sqlに代入する
-  //接続が成功したら、$pdo->query($sql_select);によって
-  //データベースへSELECT * FROM productsというSQLクエリを送信します。
-  //この操作は、productsテーブルにある全てのレコード（行）とそれぞれのカラム（列）の値を取得することを意味します。
-  //➡$sql_select = 'SELECT * FROM products';
-
- // orderパラメータの値によってSQL文を変更する    
- if ($order === 'desc') {
-  $sql_select = 'SELECT * FROM products ORDER BY updated_at DESC';
+ // keywordパラメータの値が存在すれば（商品名を検索したとき）、その値を変数$keywordに代入する    
+ if (isset($_GET['keyword'])) {
+    $keyword = $_GET['keyword'];
 } else {
-  $sql_select = 'SELECT * FROM products ORDER BY updated_at ASC';
+    $keyword = NULL;
 }
 
-  // SQL文を実行する
-  //上記のクエリがデータベースで正常に実行されると、
-  //結果セットがPDOStatementオブジェクト（この場合は$stmt_select）に格納されます。
+// orderパラメータの値によってSQL文を変更する    
+if ($order === 'desc') {
+    $sql_select = 'SELECT * FROM products WHERE product_name LIKE :keyword ORDER BY updated_at DESC';
+} else {
+    $sql_select = 'SELECT * FROM products WHERE product_name LIKE :keyword ORDER BY updated_at ASC';
+}
 
-  $stmt_select = $pdo->query($sql_select);
+// SQL文を用意する
+$stmt_select = $pdo->prepare($sql_select);
 
-  // SQL文の実行結果を配列で取得する
-  //最後に、$products = $stmt_select->fetchAll(PDO::FETCH_ASSOC);を実行することで、
-  //取得したデータを連想配列の形式で$products変数に格納します。
-  //PDO::FETCH_ASSOCをパラメータとして使用することで、
-  //結果はカラム名をキーとする連想配列として取得されます。
+// SQLのLIKE句で使うため、変数$keyword（検索ワード）の前後を%で囲む（部分一致）
+// 補足：partial match＝部分一致
+$partial_match = "%{$keyword}%";
 
-  $products = $stmt_select->fetchAll(PDO::FETCH_ASSOC);
-  
+// bindValue()メソッドを使って実際の値をプレースホルダにバインドする（割り当てる）
+$stmt_select->bindValue(':keyword', $partial_match, PDO::PARAM_STR);
 
-}catch (PDOException $e){
-  exit($e->getMessage());
+// SQL文を実行する
+$stmt_select->execute();
+
+// SQL文の実行結果を配列で取得する    
+$products = $stmt_select->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+exit($e->getMessage());
 }
 ?>
-
 
 
 <!DOCTYPE html>
@@ -78,7 +78,15 @@ try{
              <h1>商品一覧</h1>
              <div class="products-ui">
                  <div>
-                     <!-- ここに並び替えボタンと検索ボックスを作成する -->
+                 <a href="read.php?order=desc">
+                         <img src="images/desc.png" alt="降順に並び替え" class="sort-img">
+                     </a>
+                     <a href="read.php?order=asc">
+                         <img src="images/asc.png" alt="昇順に並び替え" class="sort-img">
+                     </a>
+                     <form action="read.php" method="get" class="search-form">
+                        <input type="text" class="search-box" placeholder="商品名で検索" name="keyword" value="<?=$keyword ?>">
+                     </form>   
                  </div>
                  <a href="#" class="btn">商品登録</a>
              </div>
