@@ -1,8 +1,8 @@
 <?php
- $dsn = 'mysql:dbname=php_db_app;host=localhost;charset=utf8mb4';
- $user = 'root';
+ $dsn = 'mysql:dbname=g96m3o60xmgw29d0;host=iu51mf0q32fkhfpl.cbetxkdyhwsb.us-east-1.rds.amazonaws.com;charset=utf8mb4';
+ $user = 'zqwwmmjgquj24w63';
 // MAMPを利用しているMacユーザーの方は、''ではなく'root'を代入してください
- $password = '';
+ $password = 'vj25ilbmlov7o18j';
  
  try {
      $pdo = new PDO($dsn, $user, $password);
